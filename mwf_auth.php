@@ -41,12 +41,16 @@ if(isset($_GET['name']))
 */
 class MwfUser
 {
+	// Identification types
+	const IdentName = 1;
+	const IdentId = 2;
+
 	private $mysqli = NULL, $user_row = NULL, $user_name = NULL;
 
-	public function __construct($name)
+	public function __construct($ident, $type = MwfUser::IdentName)
 	{
 	
-		if(!isset($name) || !$name)
+		if(!isset($ident) || !$ident)
 		{
 			return;
 		}
@@ -58,16 +62,27 @@ class MwfUser
 		}
 		
 		$mysqli->set_charset('utf8');
-		$name = $mysqli->real_escape_string($name);
+		$ident = $mysqli->real_escape_string($ident);
 		
-		$result = $mysqli->query("SELECT * FROM ".MwfAuthConfig::$TABLE_PREFIX."users WHERE userName = '$name'");
+		$sql = "SELECT * FROM ".MwfAuthConfig::$TABLE_PREFIX."users WHERE ";
+		switch ($type) {
+		case MwfUser::IdentName:
+			$sql .= "userName = '$ident'";
+			break;
+		case MwfUser::IdentId:
+			$sql .= "id = '$ident'";
+			break;
+		default:
+			throw new Exception("Invalid identification type $type given.");
+		}
+		$result = $mysqli->query($sql);
 		if (!$result)
 		{
-			throw new Exception("Failed to query user $name: (". $mysqli->connect_errno . ") " . $mysqli->connect_error);
+			throw new Exception("Failed to query user $ident: (". $mysqli->connect_errno . ") " . $mysqli->connect_error);
 		}
 		
 		$this->user_row = $result->fetch_assoc();
-		$this->user_name = $name;
+		$this->user_name = $this->user_row['userName'];
 		$this->mysqli = $mysqli;
 	}
 
