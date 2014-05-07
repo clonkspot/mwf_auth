@@ -51,8 +51,21 @@ MwfUser::MwfUser($name)
 MwfUser::authenticate($password)
   Checks if the password is correct for the user. Returns false if the password is wrong or the user does not exist.
 
+MwfUser::cookie_authenticate($cookie_secret)
+  Checks the user's cookie secret. Returns false if the secret is wrong or the user does not exist.
+
+  Usage example:
+
+    $split = explode(':', $_COOKIE['mwf_login']);
+    $mwf_user = new MwfUser($split[0], MwfUser::IdentId);
+    if ($mwf_user->cookie_authenticate($split[1]))
+      // Login cookie is valid.
+
 MwfUser::exists()
   Returns false if the user does not exist.
+
+MwfUser::get_user_name()
+  Returns the user's username or NULL if the user does not exist.
 
 MwfUser::get_info()
   Return information about the user in an associative array or NULL if the user does not exist. It does not contain all the fields from the MwForum DB. Fields:
