@@ -134,6 +134,11 @@ class MwfUser
 		
 		return true;
 	}
+
+	public function get_user_name()
+	{
+		return $this->user_name;
+	}
 	
 	/** Get info from a user. Returns NULL if the user does not exist, otherwise an associative array */
 	function get_info()
