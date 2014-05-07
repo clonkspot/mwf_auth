@@ -150,6 +150,12 @@ class MwfUser
 		return true;
 	}
 
+	/** Check the given cookie secret for the user. */
+	public function cookie_authenticate($cookie_secret)
+	{
+		return $this->user_row['loginAuth'] === $cookie_secret;
+	}
+
 	public function get_user_name()
 	{
 		return $this->user_name;
