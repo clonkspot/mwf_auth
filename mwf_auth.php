@@ -153,6 +153,10 @@ class MwfUser
 	/** Check the given cookie secret for the user. */
 	public function cookie_authenticate($cookie_secret)
 	{
+		if(!$this->exists())
+		{
+			return false;
+		}
 		return $this->user_row['loginAuth'] === $cookie_secret;
 	}
 
